@@ -1,0 +1,10 @@
+# {{repo}}
+
+{{title}} adapter for the PlaceholderWorks platform.
+
+```bash
+uv sync
+uv run pw-adapter check fixtures/
+uv run {{repo}} migrate
+uv run {{repo}} llm & uv run {{repo}} channel & uv run {{repo}} worker
+```

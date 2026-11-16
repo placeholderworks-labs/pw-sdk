@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{repo}}"
+version = "0.1.0"
+description = "{{title}} adapter for the PlaceholderWorks platform"
+requires-python = ">=3.11"
+dependencies = ["pw-sdk[llm,tools,channel]"]
+
+[project.entry-points."pw.adapters"]
+"{{slug}}.cart" = "{{slug}}.adapter:{{Class}}CartAdapter"
+"{{slug}}.events" = "{{slug}}.adapter:{{Class}}EventsAdapter"
+
+[project.scripts]
+{{repo}} = "{{slug}}.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["{{slug}}"]
+
+[tool.uv.sources]
+pw-sdk = { git = "https://github.com/placeholderworks-labs/pw-sdk.git", tag = "v0.1.0" }
+pw-tools = { git = "https://github.com/placeholderworks-labs/tool-ecosystem.git", tag = "v0.2.0" }
+pw-llm = { git = "https://github.com/placeholderworks-labs/llm-layer.git", tag = "v0.2.0" }
+pw-channel = { git = "https://github.com/placeholderworks-labs/channel.git", tag = "v0.1.0" }
+
+[dependency-groups]
+dev = ["pytest>=8.3"]

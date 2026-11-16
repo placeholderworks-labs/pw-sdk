@@ -1,0 +1,37 @@
+from pw_sdk import Adapter, CustomerRecord, OutcomeEvent, RejectItem, map_batch
+
+from {{slug}}.canonical import {{SLUG}}_EVENT_MAP
+from {{slug}}.payload import {{Class}}CartWebhook, {{Class}}EventWebhook
+
+
+class {{Class}}CartAdapter(Adapter):
+    name = "{{slug}}.cart"
+    version = "0.1.0"
+
+    def transform_records(self, payload, ctx):
+        def build(raw, index):
+            cart = {{Class}}CartWebhook.model_validate(raw)
+            return CustomerRecord.model_validate({
+                "ref": {"reference_id": cart.cart_id},
+                "customer": {"name": cart.customer.name, "phone": cart.customer.phone, "email": cart.customer.email},
+                "cart": {"currency": cart.currency, "total": cart.total},
+            })
+        return map_batch(payload, build)
+
+
+class {{Class}}EventsAdapter(Adapter):
+    name = "{{slug}}.events"
+    version = "0.1.0"
+
+    def transform_events(self, payload, ctx):
+        def build(raw, index):
+            event = {{Class}}EventWebhook.model_validate(raw)
+            if event.event not in {{SLUG}}_EVENT_MAP:
+                raise RejectItem(f"unknown event {event.event}", "event")
+            return OutcomeEvent(
+                event_id=event.event_id,
+                reference_id=event.cart_id,
+                kind={{SLUG}}_EVENT_MAP[event.event],
+                occurred_at=self.parse_time(event.occurred_at, ctx.timezone),
+            )
+        return map_batch(payload, build)

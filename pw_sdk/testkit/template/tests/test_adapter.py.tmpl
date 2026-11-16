@@ -1,0 +1,8 @@
+from pathlib import Path
+
+from pw_sdk.testkit import check_directory
+
+
+def test_fixtures():
+    results = check_directory(Path(__file__).resolve().parent.parent / "fixtures")
+    assert results and all(result.passed for result in results), [r.problems for r in results if not r.passed]

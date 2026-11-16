@@ -1,0 +1,24 @@
+[client]
+slug = "{{slug}}"
+name = "{{title}}"
+timezone = "Asia/Kolkata"
+
+[branding]
+company = "{{title}}"
+agent_name = "Aria"
+
+[intakes.{{slug}}_cart]
+adapter = "{{slug}}.cart"
+journey = "cart_recovery"
+
+[intakes.{{slug}}_events]
+adapter = "{{slug}}.events"
+
+[journeys.cart_recovery]
+steps = [
+  { key = "call", channel = "voice", action = "call", delay = "5m" },
+]
+
+[journeys.cart_recovery.on]
+"booking.confirmed" = "complete"
+"payment.succeeded" = "complete"

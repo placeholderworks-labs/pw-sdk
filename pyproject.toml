@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pw-sdk"
+version = "0.1.0"
+description = "PlaceholderWorks SDK: the core every client installs, with llm, tools and channel parts as extras"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "pydantic>=2.9",
+    "httpx>=0.28",
+    "python-dotenv>=1.0",
+    "tzdata>=2024.1",
+]
+
+[project.optional-dependencies]
+llm = ["pw-llm"]
+tools = ["pw-tools"]
+channel = ["pw-channel[voice,whatsapp,email]"]
+voice = ["pw-channel[voice]"]
+whatsapp = ["pw-channel[whatsapp]"]
+email = ["pw-channel[email]"]
+all = ["pw-llm", "pw-tools", "pw-channel[voice,whatsapp,email]"]
+
+[project.scripts]
+pw-adapter = "pw_sdk.testkit.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pw_sdk"]
+
+[tool.uv.sources]
+pw-llm = { path = "../pw-llm", editable = true }
+pw-tools = { path = "../pw-tools", editable = true }
+pw-channel = { path = "../pw-channel", editable = true }
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

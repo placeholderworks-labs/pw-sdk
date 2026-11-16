@@ -1,0 +1,24 @@
+from pydantic import BaseModel, ConfigDict
+
+
+class {{Class}}Customer(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    name: str = ""
+    phone: str | None = None
+    email: str | None = None
+
+
+class {{Class}}CartWebhook(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    cart_id: str
+    customer: {{Class}}Customer
+    currency: str = "INR"
+    total: float = 0
+
+
+class {{Class}}EventWebhook(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    event_id: str
+    cart_id: str
+    event: str
+    occurred_at: str
